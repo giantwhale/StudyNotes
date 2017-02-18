@@ -1,13 +1,18 @@
 cdef extern from "c_code.c":
-    float *comput(int size)
+    float *compute(int size)
 
 from libc.stdlib cimport free
-from cpython cimport PyObject, Py_INCRE
+from cpython cimport PyObject, Py_INCREF
 
 import numpy as np
 
 # Import the C-level symbols of numpy
 cimport numpy as np
+
+# numpy must be initialized. When using numpy from C or Cython you must
+# _always_ do that, or you will have segfaults
+np.import_array()
+
 
 cdef class ArrayWrapper:
     cdef void* data_ptr
@@ -56,6 +61,6 @@ def py_compute(int size):
     ndarray.base = <PyObject*>array_wrapper
     # Increment the reference count, as the above assignment was done in 
     # C, and Python does not know that there is this additional reference
-    Py_INCRE(array_wrapper)
+    Py_INCREF(array_wrapper)
 
     return ndarray
