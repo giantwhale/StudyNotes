@@ -30,9 +30,11 @@ Family read() -> open, close, read, write
 #include <fcntl.h>  // manipulate file descriptor
 
 int open(const char* path, int oflag, ... /* mode_t mode */ ); 
-// One of the following five oflags must be specified: O_RDONLY, O_WRONLY, O_RDWR, O_EXEC, O_SEARCH.
-// Some commonly used oflags, O_APPEND, O_CREAT, O_NONBLOCK etc. Refer to APUE for a full list of oflags.
-// Triple dots ... is only used when a new file is being created.\
+// One of the following five oflags must be specified: 
+//     O_RDONLY, O_WRONLY, O_RDWR, O_EXEC, O_SEARCH.
+// Some commonly used oflags, O_APPEND, O_CREAT, O_NONBLOCK etc. Refer to APUE for 
+// a full list of oflags.
+// Triple dots ... is only used when a new file is being created.
 
 int create(const char *path, mode_t mode);
 
