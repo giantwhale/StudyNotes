@@ -26,7 +26,6 @@ Family read() -> open, close, read, write
 
 Programming details:
 
-
 ```c++
 
 #include <fcntl.h>  // manipulate file descriptor
