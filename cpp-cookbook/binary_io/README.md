@@ -1,4 +1,4 @@
-# Read/Write Binary Files
+# Read/Write Files
 
 ## Endianness
 
@@ -21,7 +21,7 @@ We dicuss each in details
 The function is available in the unix header file `<unistd.h>`. It makes a **system call**. To open/create files, we also need to use functions from `<fcntl.h>`.
 
 ```
-Family read() -> open, close, read, write
+Family read() -> open, close, read, write, lseek
 ```
 
 Programming details:
@@ -57,7 +57,7 @@ ssize_t write(int fd, void *buf, size_t nbytes);
 `fread()` is part of the C library (`libc`), and provides buffered reads. It is usually implemented by calling `read()` in order to fill its buffer. 
 
 ```
-Family fread() -> fopen, fclose, fread, fwrite, fgetc, fputc
+Family fread() -> fopen, fclose, fread, fwrite, fgetc, fputc, fseek
 ```
 
 Programming details:
@@ -77,4 +77,49 @@ size_t fwrite ( const void * ptr, size_t size, size_t count, FILE * stream );
 
 int fclose ( FILE * stream );  // return EOF on error
 ```
+
+
+### The C++ `fstream`
+
+This is similar to `fread`, but with a more object-oriented flavor.
+
+Programming details:
+
+```c++
+ifstream();
+explicit ifstream( const char* filename, ios_base::openmode mode = ios_base::in );
+
+void ifstream::open(const   char* filename,  ios_base::openmode mode = ios_base::in);
+void ifstream::open(const string& filename,  ios_base::openmode mode = ios_base::in);
+
+istream& read (char* s, streamsize n);
+
+istream& seekg (streampos pos);
+istream& seekg (streamoff off, ios_base::seekdir way);
+// way could be ifstream::beg or ifstream::end (member variables)
+
+streampos tellg();  // return the current position
+
+```
+
+Demo:
+
+```c++
+ifstream in(name,ios::binary);
+vector<int> numbers(512);
+in.read(reinterpret_cast<char *>(&numbers[0]), sizeof(int) * 512);
+in.close();
+```
+
+```c++
+// get length of file:
+std::ifstream::binary);
+if (is) {
+    is.seekg(0, is.end);
+    int length = is.tellg();
+    is.seekg(0, is.beg);
+}
+```
+
+
 
