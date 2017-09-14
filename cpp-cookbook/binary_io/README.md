@@ -25,6 +25,21 @@ The function is available in the unix header file `<unistd.h>`. To open/create f
 
 #include <fcntl.h>
 
-int open(const char* path, int oflag, ... /* mode_t mode */ );
+int open(const char* path, int oflag, ... /* mode_t mode */ ); 
+// Most oftenly used modes are O_RDONLY, O_WRONLY, O_RDWR, O_APPEND, O_CREAT
+// Refer to APUE for a full list of modes.
+
+int create(const char *path, mode_t mode);
+
+#include <unistd.h>
+
+int close(int fd);
+
+off_t lseek(int fd, off_t offset, int whence);
+// whence can be SEEK_SET, SEEK_CUR, or SEEK_END
+
+
+// all functions return -1 on error
 
 ```
+
