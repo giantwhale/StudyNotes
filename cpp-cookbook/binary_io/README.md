@@ -113,7 +113,7 @@ in.close();
 
 ```c++
 // get length of file:
-std::ifstream::binary);
+std::ifstream is("test.txt", std::ifstream::binary);
 if (is) {
     is.seekg(0, is.end);
     int length = is.tellg();
