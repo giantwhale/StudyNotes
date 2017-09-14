@@ -86,8 +86,11 @@ This is similar to `fread`, but with a more object-oriented flavor.
 Programming details:
 
 ```c++
+#include <fstream>
+
 ifstream();
 explicit ifstream( const char* filename, ios_base::openmode mode = ios_base::in );
+// another popular option for mode is std::ofstream::binary
 
 void ifstream::open(const   char* filename,  ios_base::openmode mode = ios_base::in);
 void ifstream::open(const string& filename,  ios_base::openmode mode = ios_base::in);
@@ -96,10 +99,15 @@ istream& read (char* s, streamsize n);
 
 istream& seekg (streampos pos);
 istream& seekg (streamoff off, ios_base::seekdir way);
-// way could be ifstream::beg or ifstream::end (member variables)
+// way could be ios_base::beg, ios_base::end, or ios_base::cur (member variables)
 
 streampos tellg();  // return the current position
 
+ofstream();
+explicit ofstream (const char* filename, ios_base::openmode mode = ios_base::out);
+// another popular option for mode is std::ofstream::binary
+
+ostream& write (const char* s, streamsize n);
 ```
 
 Demo:
