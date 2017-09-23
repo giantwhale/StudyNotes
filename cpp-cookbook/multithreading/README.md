@@ -26,11 +26,11 @@ see [00_hello_thread.cpp](https://github.com/giantwhale/StudyNotes/blob/master/c
 initialize a new thread and return a future whose value, when ready, will be set to the 
 return value of the thread function. 
 
-`std::async` is more than just a syntax sugar. Read Bartosz Milewski's blog post (Async
- Tasks in C++11: Not Quite There Yet)[https://bartoszmilewski.com/2011/10/10/async-tasks-in-c11-not-quite-there-yet/] for more details.
+`std::async` is more than just a syntax sugar. Read Bartosz Milewski's blog post [Async
+ Tasks in C++11: Not Quite There Yet](https://bartoszmilewski.com/2011/10/10/async-tasks-in-c11-not-quite-there-yet/) for more details.
 
-* For usage of promise and futures, see demo (02_promise_n_future.cpp)[https://github.com/giantwhale/StudyNotes/blob/master/cpp-cookbook/multithreading/02_promise_n_future.cpp]
-* For usage of async as a syntax sugar, see demo (03_async.cpp)[https://github.com/giantwhale/StudyNotes/blob/master/cpp-cookbook/multithreading/03_async.cpp]
+* For usage of promise and futures, see demo [02_promise_n_future.cpp](https://github.com/giantwhale/StudyNotes/blob/master/cpp-cookbook/multithreading/02_promise_n_future.cpp)
+* For usage of async as a syntax sugar, see demo [03_async.cpp](https://github.com/giantwhale/StudyNotes/blob/master/cpp-cookbook/multithreading/03_async.cpp)
 
 Shared Memory
 -------------------------------------------
