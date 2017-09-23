@@ -41,14 +41,16 @@ among threads, sometimes using shared_memory is unavoidable.
 * Using shared memory is safe as long as 
 
 **Monitor** is data structure that helps synchronize instructions in a multithreading 
-environment. 
+environment. The code snippet below shows the C++ implementation. In Java, the keyword `synchronized` 
+has similar effect [link](https://docs.oracle.com/javase/tutorial/essential/concurrency/syncmeth.html). (In java, each method has its own mutex.)
 
 ```c++
 #include <mutex>
 class Monitor {
+    std::mutex _mutex;
 public:
     void synchronized_function(int input) {
-        std::lock_guard<std::mutex> lock;
+        std::lock_guard<std::mutex> lock(_mutex);
         // ...
     }
 };
