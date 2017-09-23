@@ -56,7 +56,8 @@ among threads, sometimes using shared_memory is unavoidable.
 
 **Monitor** is data structure that helps synchronize instructions in a multithreading 
 environment. The code snippet below shows the C++ implementation. In Java, the keyword `synchronized` 
-has similar effect [link](https://docs.oracle.com/javase/tutorial/essential/concurrency/syncmeth.html). (In java, each method has its own mutex.)
+has similar effect [link](https://docs.oracle.com/javase/tutorial/essential/concurrency/syncmeth.html). 
+(In java, each method has its own mutex.)
 
 ```c++
 #include <mutex>
@@ -71,30 +72,85 @@ public:
 ```
 
 
-### Conditional Variable
+### Condition Variable
 
-A conditional variable (referred to as `cond` in the code below) allows communication
+A condition variable (referred to as `cond` in the code below) allows communication
 between a **producer** and one or multiple **consumers**. The producer can use either
 `notify_one()`, or `notify_all()` to wake up the consumer. If no consumer is 
-`wait()`ing for the notification, it gets thrown away.
+`wait()`ing, the notification is ignored. 
+
+Since the condition variable doesn't carray any useful information, we typically 
 
 ```c++
 // Producer
 {
-    lock_guard(mtx);
-    v = true;  // the shared variable
+    lock_guard(mtx); 
+    v = true;  // the shared state
 }
 cond.notify_one();
 ```
 
 
+First consumer implementation: the consumer implementation below isn't thread safe, 
+because the loop body isn't atomic. Consider the following sequence of execution:
+
+* consumer checks `v` and found it is false
+* producer sets `v` to true
+* producer calls `notify()`, which is ignore by the consumer
+* consumer waits forever.
 
 ```c++
 // Consumer
 unique_lock lck(mtx);
-while (1) {
+for(;;) {
     if (v) break;   // check if the state has been set by the producer
     cond.wait(lck)  // unlock the lock, allowing the producer to set the state
                     // variable v, and wait for the producer for notification.
 }
+v = false; // reset v
 ```
+
+To avoid the data race condition above, the C++11 standard allows an alternative
+way to call `wait()`:
+
+```c++
+unique_lock lck(mtx);
+cond.wait(lck, [&v]{return v;});
+v = false;
+```
+
+#### Blocking Messages Queue
+Let's use condition_variable to implement a blocking message queue that is thread safe.
+
+```c++
+#include <deque>
+#include <condition_variable>
+
+template<class T>
+class MsgQueue {
+    std::deque<T> _queue;
+    std::condition_variable _cond;
+    std::mutex _mutex;
+public:
+    void send(T && msg) {
+        // will need to notify the receiver that
+        // the message is ready
+        {
+            std::lock_guard<std::mutex> lck(_mutex);
+            _queue.push_front(std::move(msg));
+        }
+        _cond.notify_one();
+    }
+    T recv() {
+        // if queue is empty, wait for the msg to be ready
+        std::unique_lock<std::mutex> lck(_mutex);
+        // wake up when the queue is not empty
+        _cond.wait(lck, [this]{ return !_queue.empty(); });
+        T msg = std::move(_queue.back());
+        _queue.pop_back();
+        return msg; 
+    }
+};
+```
+
+
