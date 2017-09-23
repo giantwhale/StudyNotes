@@ -18,7 +18,7 @@ In C++11, thread can be initialized in a variety of ways:
 
 ### Creating thread using std::thread
 
-see (00_hello_thread.cpp)[https://github.com/giantwhale/StudyNotes/blob/master/cpp-cookbook/multithreading/00_hello_thread.cpp] for a demo. 
+see [00_hello_thread.cpp](https://github.com/giantwhale/StudyNotes/blob/master/cpp-cookbook/multithreading/00_hello_thread.cpp) for a demo. 
 
 
 
