@@ -1,6 +1,7 @@
 C++ Multithreading
 ===========================================
 
+
 Thread Basics
 -------------------------------------------
 Each thread has its **own stack**. 
@@ -10,6 +11,17 @@ Difference between threads and processes:
 
 * threads (of the same process) run in a shared memory space, while processes run in 
   separate memory spaces.
+
+### References
+
+* Anthony Williams (the author of c++11 compatible library `just::thread`), C++ Concurrency in Action. 
+* Maurice Herlihy, Nir Shavit, The Art of Multiprocessor Programming. (More theoretical)
+
+### Debugger
+
+So far the only non-commercial debugger I can find is [Helgrind](http://valgrind.org/docs/manual/hg-manual.html)
+
+corensic has a commericla debugger **Jinx**.
 
 
 Hello Thread
@@ -38,7 +50,9 @@ Shared memory is one of the most effective way to share data in a multithread pr
 Although it is recommended to use move-and-swap technique over shared memory to pass data 
 among threads, sometimes using shared_memory is unavoidable.
 
-* Using shared memory is safe as long as 
+**For shared_memory to be safe, we need to synchronize the work flow.**
+
+### Mutex and Monitor
 
 **Monitor** is data structure that helps synchronize instructions in a multithreading 
 environment. The code snippet below shows the C++ implementation. In Java, the keyword `synchronized` 
@@ -56,3 +70,31 @@ public:
 };
 ```
 
+
+### Conditional Variable
+
+A conditional variable (referred to as `cond` in the code below) allows communication
+between a **producer** and one or multiple **consumers**. The producer can use either
+`notify_one()`, or `notify_all()` to wake up the consumer. If no consumer is 
+`wait()`ing for the notification, it gets thrown away.
+
+```c++
+// Producer
+{
+    lock_guard(mtx);
+    v = true;  // the shared variable
+}
+cond.notify_one();
+```
+
+
+
+```c++
+// Consumer
+unique_lock lck(mtx);
+while (1) {
+    if (v) break;   // check if the state has been set by the producer
+    cond.wait(lck)  // unlock the lock, allowing the producer to set the state
+                    // variable v, and wait for the producer for notification.
+}
+```
