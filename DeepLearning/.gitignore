@@ -1,1 +1,5 @@
 *.png
+*.model
+*.pyc
+.ipynb_checkpoints/
+
